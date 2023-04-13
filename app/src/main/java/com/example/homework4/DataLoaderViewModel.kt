@@ -6,19 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework4.files.NewsResponse
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.sql.DataSource
 
 class DataLoaderViewModel: ViewModel() {
 
-    private val _news = MutableLiveData<Result<NewsResponse>>()
-    val news: LiveData<Result<NewsResponse>> = _news
+    private val _news = MutableLiveData<Result<Response<NewsResponse>>>()
+    val news: LiveData<Result<Response<NewsResponse>>> = _news
 
     fun getNews() {
         viewModelScope.launch {
             try {
                 val response = DataSource().loadNews()
                 _news.postValue(Result.success(response))
+
             } catch (e: Exception) {
+                println(e.message)
                 _news.postValue(Result.Error(e))
             }
         }
