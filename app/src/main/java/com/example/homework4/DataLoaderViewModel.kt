@@ -1,5 +1,6 @@
 package com.example.homework4
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.homework4.files.NewsResponse
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import javax.sql.DataSource
 
 class DataLoaderViewModel: ViewModel() {
 
@@ -17,7 +17,7 @@ class DataLoaderViewModel: ViewModel() {
     fun getNews() {
         viewModelScope.launch {
             try {
-                val response = DataSource().loadNews()
+                val response = DataSource().loadNews("")
                 _news.postValue(Result.success(response))
 
             } catch (e: Exception) {
@@ -27,6 +27,40 @@ class DataLoaderViewModel: ViewModel() {
         }
     }
 
+
+    fun loadNewsWithCategory(newsCategory: String) {
+        viewModelScope.launch {
+            try {
+                val response = DataSource().loadNews(newsCategory.lowercase())
+                _news.postValue(Result.success(response))
+            } catch (e: Exception) {
+                println(e.message.toString())
+            }
+
+        }
+    }
+
+
+    fun search(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = DataSource().searchNews(query)
+                if(response.isSuccessful) {
+                    val news = response.body()?.articles
+                    if(news == null) {
+                        _news.postValue(Result.loading("No Results Found"))
+                    } else {
+                        _news.postValue(Result.success(response))
+                    }
+                }
+                Log.d(">>", response.message())
+                _news.postValue(Result.success(response))
+
+            } catch (e: Exception) {
+                println(e.message.toString())
+            }
+        }
+    }
 }
 //
 sealed class Result<out T : Any> {
@@ -38,5 +72,6 @@ sealed class Result<out T : Any> {
         fun <T : Any> loading(message: String = ""): Result<T> = Loading(message)
         fun <T : Any> success(data: T): Result<T> = Success(data)
         fun error(exception: Exception): Result<Nothing> = Error(exception)
+        fun nothingFound(message: String): Result<Nothing> = Loading(message)
     }
 }
