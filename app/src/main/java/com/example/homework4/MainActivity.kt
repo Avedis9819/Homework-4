@@ -1,6 +1,7 @@
 package com.example.homework4
 
 import android.content.ClipData.Item
+import android.content.Intent
 
 import android.os.Bundle
 import android.util.Log
@@ -178,6 +179,7 @@ class MainActivity : ComponentActivity() {
                                     .padding(8.dp)
                                     .fillMaxWidth()
                                     .clickable(onClick = {
+
                                     })
                             ) {
                                 Column(
@@ -225,5 +227,7 @@ class MainActivity : ComponentActivity() {
     fun refreshWithCategory(category: String) {
         viewModel.loadNewsWithCategory(category.toString().lowercase())
     }
+
+
 }
 

@@ -1,8 +1,8 @@
 package com.example.homework4.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -29,7 +29,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
         value = searchValue,
         onValueChange = {searchValue = it},
         modifier = Modifier
-            .fillMaxWidth()
+            .width(250.dp)
             .height(50.dp),
 
         keyboardOptions = KeyboardOptions(
